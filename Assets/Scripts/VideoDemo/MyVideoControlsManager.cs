@@ -164,7 +164,7 @@ namespace Assets.Scripts
         public void CloseSubPanels()
         {
             volumeWidget.SetActive(false);
-            settingsPanel.SetActive(false);
+            // settingsPanel.SetActive(false);
         }
 
         /// <summary>Fade this video canvas in or out.</summary>
