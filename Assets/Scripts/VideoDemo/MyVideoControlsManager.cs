@@ -32,7 +32,7 @@ namespace Assets.Scripts
         private Slider videoScrubber;
         private Slider volumeSlider;
         private GameObject volumeWidget;
-        private GameObject settingsPanel;
+        // private GameObject settingsPanel;
         private GameObject bufferedBackground;
         private Vector3 basePosition;
         private Text videoPosition;
@@ -73,17 +73,17 @@ namespace Assets.Scripts
             volumeWidget.SetActive(visible);
 
             // close settings if volume opens.
-            settingsPanel.SetActive(settingsPanel.activeSelf && !visible);
+            // settingsPanel.SetActive(settingsPanel.activeSelf && !visible);
         }
 
         /// <summary>Raises the toggle settings event.</summary>
         public void OnToggleSettings()
         {
-            bool visible = !settingsPanel.activeSelf;
-            settingsPanel.SetActive(visible);
+            // bool visible = !settingsPanel.activeSelf;
+            // settingsPanel.SetActive(visible);
 
             // close settings if volume opens.
-            volumeWidget.SetActive(volumeWidget.activeSelf && !visible);
+            // volumeWidget.SetActive(volumeWidget.activeSelf && !visible);
         }
 
         /// <summary>Raises the play pause event.</summary>
@@ -262,10 +262,12 @@ namespace Assets.Scripts
                 {
                     volumeWidget = obj.gameObject;
                 }
+                /*
                 else if (obj.gameObject.name == "settings_panel")
                 {
                     settingsPanel = obj.gameObject;
                 }
+                */
             }
         }
 

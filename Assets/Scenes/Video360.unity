@@ -1025,7 +1025,7 @@ VideoPlayer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 282624380}
   m_Enabled: 1
-  m_VideoClip: {fileID: 32900000, guid: d811217e2a3c552409aebe55983a085a, type: 3}
+  m_VideoClip: {fileID: 32900000, guid: e006466e97c891a4da5afb9ef57b2fac, type: 3}
   m_TargetCameraAlpha: 1
   m_TargetCamera3DLayout: 0
   m_TargetCamera: {fileID: 0}
@@ -1042,7 +1042,7 @@ VideoPlayer:
   - {fileID: 0}
   m_DirectAudioVolumes:
   - 1
-  m_Url: 
+  m_Url: https://liveunibo-my.sharepoint.com/personal/vincenzo_armandi_studio_unibo_it/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fvincenzo%5Farmandi%5Fstudio%5Funibo%5Fit%2FDocuments%2FTeatro%5FModena%2Fclip%5F10%5Fmin%5Famarcord%5Fdi%5Fun%5Ftango%5Fmodena%2Emp4&parent=%2Fpersonal%2Fvincenzo%5Farmandi%5Fstudio%5Funibo%5Fit%2FDocuments%2FTeatro%5FModena&ga=1
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
