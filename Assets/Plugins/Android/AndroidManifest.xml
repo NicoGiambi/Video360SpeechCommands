@@ -4,7 +4,7 @@
 		  android:versionCode="1" android:versionName="1.0">
   <uses-permission android:name="android.permission.RECORD_AUDIO" />
   <uses-permission android:name="android.permission.INTERNET" />
-  <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="23" />
+  <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="30" />
   <application 
     android:icon="@drawable/app_icon" 
     android:label="@string/app_name" android:debuggable="false"
@@ -12,6 +12,7 @@
     android:theme="@style/UnityThemeSelector">
     <activity 
       android:name="com.starseed.speechtotext.MainActivity" 
+	  android:exported="true"
 	    android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
       android:label="@string/app_name">
       <intent-filter>
