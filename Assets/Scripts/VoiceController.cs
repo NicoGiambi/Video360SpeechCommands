@@ -8,7 +8,7 @@ using Assets.Scripts;
 
 public class VoiceController : MonoBehaviour {
 
-    // const string LANG_CODE = "en-US";
+    // string LANG_CODE = "en-US";
     string LANG_CODE = "it-IT";
 
     [SerializeField]
@@ -23,6 +23,10 @@ public class VoiceController : MonoBehaviour {
     Text text;
     [SerializeField]
     Button speech;
+    [SerializeField]
+    Canvas textit;
+    [SerializeField]
+    Canvas texten;
 
 
     bool isPlaying = true;
@@ -30,9 +34,19 @@ public class VoiceController : MonoBehaviour {
 
     void Start() {
         Setup(LANG_CODE);
+        if (LANG_CODE == "en-US")
+        {
+            texten.gameObject.SetActive(true);
+            textit.gameObject.SetActive(false);
+        }
+        else
+        {
+            texten.gameObject.SetActive(false);
+            textit.gameObject.SetActive(true);
+        }
 
 #if UNITY_ANDROID
-        SpeechToText.instance.onPartialResultsCallback = OnPartialSpeechResult;
+            SpeechToText.instance.onPartialResultsCallback = OnPartialSpeechResult;
 #endif
 
         SpeechToText.instance.onResultCallback = OnFinalSpeechResult;
@@ -196,7 +210,7 @@ public class VoiceController : MonoBehaviour {
             else
                 uiText = "velocità di riproduzione aumentata";
         }
-        else if (((result.StartsWith("track") || result.StartsWith("truck") || result.StartsWith("drug")) && LANG_CODE == "en-US") || (result.StartsWith("traccia") && LANG_CODE == "it-IT"))
+        else if (((result.StartsWith("track") || result.StartsWith("truck")) && LANG_CODE == "en-US") || (result.StartsWith("traccia") && LANG_CODE == "it-IT"))
         {
             string suffix = LANG_CODE == "en-US" ? result.Remove(0, 5 + 1) : result.Remove(0, 7 + 1);
 
@@ -292,11 +306,15 @@ public class VoiceController : MonoBehaviour {
             {
                 uiText = "Lingua impostata in italiano";
                 LANG_CODE = "it-IT";
+                textit.gameObject.SetActive(true);
+                texten.gameObject.SetActive(false);
             }
             else
             {
                 uiText = "Language set to English";
                 LANG_CODE = "en-US";
+                textit.gameObject.SetActive(false);
+                texten.gameObject.SetActive(true);
             }
 
             Setup(LANG_CODE);
