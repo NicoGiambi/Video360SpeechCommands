@@ -43,6 +43,8 @@ namespace Assets.Scripts
         private Button[] tracks = new Button[11];
         private float[] trackTimes = new float[11];
         private string[] tracksTitles = new string[11];
+        [SerializeField]
+        Text url;
 
         /// <summary>Gets or sets the player.</summary>
         /// <value>The player.</value>
@@ -273,8 +275,6 @@ namespace Assets.Scripts
 
         private void Start()
         {
-            getTrackTitles();
-
             foreach (MyScrubberEvents s in GetComponentsInChildren<MyScrubberEvents>(true))
             {
                 s.ControlManager = this;
@@ -282,6 +282,7 @@ namespace Assets.Scripts
 
             if (Player != null)
             {
+                Player.url = url.text;
                 Player.Prepare();
             }
 
