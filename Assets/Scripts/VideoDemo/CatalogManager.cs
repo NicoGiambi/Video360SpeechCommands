@@ -30,10 +30,11 @@ namespace Assets.Scripts
         {
             mainCamera.transform.localScale = new Vector3(1, 1, 1);
 
-            string uri = "http://localhost:8000/Desktop/Anime/Excel%20Saga/";
+            // string uri = "http://localhost:8000/Desktop/Anime/Excel%20Saga/";
+            string uri = "http://localhost:8000/UnityProjects/Video360SpeechCommands/Assets/Videos/";
             WebRequest request = WebRequest.Create(uri);
             WebResponse response = request.GetResponse();
-            Regex regex = new Regex("<a href=\".*\">(?<name>.*)</a>");
+            Regex regex = new Regex("<a href=\".*[.mp4]\">(?<name>.*)</a>");
 
             using (var reader = new StreamReader(response.GetResponseStream()))
             {
@@ -69,7 +70,13 @@ namespace Assets.Scripts
 
             foreach (Text txt in Viewport.GetComponentsInChildren<Text>())
             {
-                txt.text = videoNames[t];
+                if (t < videoNames.Length)
+                {
+                    txt.text = videoNames[t];
+                }
+                else
+                    txt.text = "";
+
                 t++;
             }
 
@@ -77,37 +84,46 @@ namespace Assets.Scripts
 
             foreach (RawImage img in Viewport.GetComponentsInChildren<RawImage>())
             {
+                if (i < videoNames.Length)
+                {
 
-                videos[i] = img.GetComponent<UnityEngine.Video.VideoPlayer>();
-                // Play on awake defaults to true. Set it to false to avoid the url set
-                // below to auto-start playback since we're in Start().
-                videos[i].playOnAwake = false;
+                    videos[i] = img.GetComponent<UnityEngine.Video.VideoPlayer>();
+                    // Play on awake defaults to true. Set it to false to avoid the url set
+                    // below to auto-start playback since we're in Start().
+                    videos[i].playOnAwake = false;
 
-                // Set the video to play. URL supports local absolute or relative paths.
-                // Here, using absolute.
-                videos[i].url = uri + videoNames[i];
+                    // Set the video to play. URL supports local absolute or relative paths.
+                    // Here, using absolute.
+                    videos[i].url = uri + videoNames[i];
 
-                // Debug.Log(videos[i].url);
+                    // Debug.Log(videos[i].url);
 
-                videos[i].SetDirectAudioMute(0, true);
+                    videos[i].SetDirectAudioMute(0, true);
 
-                videos[i].Prepare();
+                    videos[i].Prepare();
 
-                // Skip the first 100 frames.
-                videos[i].frame = (int)videos[i].frameCount / 2;
+                    // Skip the first 100 frames.
+                    videos[i].frame = (int)videos[i].frameCount / 2;
 
-                videos[i].Play();
+                    videos[i].Play();
+                    videos[i].Pause();
 
-                i++;
+                    i++;
 
-                // videoPlayer.Pause();
+                    // videoPlayer.Pause();
 
-                // Start playback. This means the VideoPlayer may have to prepare (reserve
-                // resources, pre-load a few frames, etc.). To better control the delays
-                // associated with this preparation one can use videoPlayer.Prepare() along with
-                // its prepareCompleted event.
+                    // Start playback. This means the VideoPlayer may have to prepare (reserve
+                    // resources, pre-load a few frames, etc.). To better control the delays
+                    // associated with this preparation one can use videoPlayer.Prepare() along with
+                    // its prepareCompleted event.
+                }
+                else 
+                {
+                    img.gameObject.SetActive(false);
+                }
             }
         }
+
         private void Update()
         {
             // for (var i = 0; i < videos.Length; i++) 
