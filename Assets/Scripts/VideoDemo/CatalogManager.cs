@@ -23,6 +23,7 @@ namespace Assets.Scripts
         GameObject catalog;
 
         string[] videoNames;
+        bool noVideos = true;
 
         UnityEngine.Video.VideoPlayer[] videos;
 
@@ -32,88 +33,126 @@ namespace Assets.Scripts
 
             string uri = "http://localhost:8000/UnityProjects/Video360SpeechCommands/Assets/Videos/";
             WebRequest request = WebRequest.Create(uri);
-            WebResponse response = request.GetResponse();
+            WebResponse response;
+            try
+            {
+                response = request.GetResponse();
+            }
+            catch
+            {
+                response = null;
+            }
+
             Regex regex = new Regex("<a href=\".*[.mp4]\">(?<name>.*)</a>");
 
-            using (var reader = new StreamReader(response.GetResponseStream()))
+            if (response != null)
             {
-                string result = reader.ReadToEnd();
-
-                MatchCollection matches = regex.Matches(result);
-                if (matches.Count == 0)
+                using (var reader = new StreamReader(response.GetResponseStream()))
                 {
-                    Debug.Log("parse failed.");
-                    return;
+                    string result = reader.ReadToEnd();
+
+                    MatchCollection matches = regex.Matches(result);
+                    if (matches.Count == 0)
+                    {
+                        Debug.Log("parse failed.");
+                        return;
+                    }
+                    else
+                    {
+                        noVideos = false;
+                        videoNames = new String[matches.Count];
+                        var j = 0;
+                        foreach (Match match in matches)
+                        {
+                            if (!match.Success) { continue; }
+                            videoNames[j] = match.Groups["name"].ToString();
+                            //Debug.Log(match.Groups["name"]);
+                            j++;
+                        }
+                    }
                 }
 
-                videoNames = new String[matches.Count];
-                var j = 0;
-                foreach (Match match in matches)
+                if (!noVideos)
                 {
-                    if (!match.Success) { continue; }
-                    videoNames[j] = match.Groups["name"].ToString();
-                    //Debug.Log(match.Groups["name"]);
-                    j++;
-                }
-            }
+                    var imgs = 0;
+                    foreach (RawImage img in Viewport.GetComponentsInChildren<RawImage>())
+                    {
+                        imgs++;
+                    }
 
-            var imgs = 0;
-            foreach (RawImage img in Viewport.GetComponentsInChildren<RawImage>())
-            {
-                imgs++;
-            }
+                    videos = new UnityEngine.Video.VideoPlayer[imgs];
 
-            videos = new UnityEngine.Video.VideoPlayer[imgs];
+                    var t = 0;
 
-            var t = 0;
+                    foreach (Text txt in Viewport.GetComponentsInChildren<Text>())
+                    {
+                        if (t < videoNames.Length)
+                            txt.text = videoNames[t];
+                        else
+                            txt.gameObject.SetActive(false);
 
-            foreach (Text txt in Viewport.GetComponentsInChildren<Text>())
-            {
-                if (t < videoNames.Length)
-                {
-                    txt.text = videoNames[t];
+                        t++;
+                    }
+
+                    var i = 0;
+
+                    foreach (RawImage img in Viewport.GetComponentsInChildren<RawImage>())
+                    {
+                        if (i < videoNames.Length)
+                        {
+
+                            videos[i] = img.GetComponent<UnityEngine.Video.VideoPlayer>();
+                            // Play on awake defaults to true. Set it to false to avoid the url set
+                            // below to auto-start playback since we're in Start().
+                            videos[i].playOnAwake = false;
+
+                            // Set the video to play. URL supports local absolute or relative paths.
+                            // Here, using absolute.
+                            videos[i].url = uri + videoNames[i];
+
+                            // Debug.Log(videos[i].url);
+
+                            videos[i].SetDirectAudioMute(0, true);
+
+                            videos[i].Prepare();
+
+                            // Skip the first 100 frames.
+                            videos[i].frame = (int)videos[i].frameCount / 2;
+
+                            videos[i].Play();
+                            videos[i].Pause();
+                            videos[i].Play();
+                            
+                            i++;
+                        }
+                        else
+                        {
+                            img.gameObject.SetActive(false);
+                        }
+                    }
                 }
                 else
-                    txt.text = "";
-
-                t++;
-            }
-
-            var i = 0;
-
-            foreach (RawImage img in Viewport.GetComponentsInChildren<RawImage>())
-            {
-                if (i < videoNames.Length)
                 {
-
-                    videos[i] = img.GetComponent<UnityEngine.Video.VideoPlayer>();
-                    // Play on awake defaults to true. Set it to false to avoid the url set
-                    // below to auto-start playback since we're in Start().
-                    videos[i].playOnAwake = false;
-
-                    // Set the video to play. URL supports local absolute or relative paths.
-                    // Here, using absolute.
-                    videos[i].url = uri + videoNames[i];
-
-                    // Debug.Log(videos[i].url);
-
-                    videos[i].SetDirectAudioMute(0, true);
-
-                    videos[i].Prepare();
-
-                    // Skip the first 100 frames.
-                    videos[i].frame = (int)videos[i].frameCount / 2;
-
-                    videos[i].Play();
-                    videos[i].Pause();
-                    videos[i].Play();
-
-                    i++;
+                    mytext.text = "No videos found";
+                    mytext.color = Color.white;
+                    mytext.fontSize = 100;
+                    mytext.rectTransform.localScale = new Vector3((float)0.5, (float)0.5, 1);
                 }
-                else 
+            }
+            else 
+            {
+                foreach (Text txt in Viewport.GetComponentsInChildren<Text>())
+                {
+                    txt.gameObject.SetActive(false);
+                }
+                foreach (RawImage img in Viewport.GetComponentsInChildren<RawImage>())
                 {
                     img.gameObject.SetActive(false);
                 }
+                mytext.text = "No server found";
+                mytext.color = Color.white;
+                mytext.fontSize = 100;
+                mytext.rectTransform.localScale = new Vector3((float)0.5, (float)0.5, 1);
             }
         }
 
