@@ -22,7 +22,7 @@ namespace Assets.Scripts
         [SerializeField]
         GameObject catalog;
 
-        String[] videoNames;
+        string[] videoNames;
 
         UnityEngine.Video.VideoPlayer[] videos;
 
@@ -30,7 +30,6 @@ namespace Assets.Scripts
         {
             mainCamera.transform.localScale = new Vector3(1, 1, 1);
 
-            // string uri = "http://localhost:8000/Desktop/Anime/Excel%20Saga/";
             string uri = "http://localhost:8000/UnityProjects/Video360SpeechCommands/Assets/Videos/";
             WebRequest request = WebRequest.Create(uri);
             WebResponse response = request.GetResponse();
@@ -107,15 +106,9 @@ namespace Assets.Scripts
 
                     videos[i].Play();
                     videos[i].Pause();
+                    videos[i].Play();
 
                     i++;
-
-                    // videoPlayer.Pause();
-
-                    // Start playback. This means the VideoPlayer may have to prepare (reserve
-                    // resources, pre-load a few frames, etc.). To better control the delays
-                    // associated with this preparation one can use videoPlayer.Prepare() along with
-                    // its prepareCompleted event.
                 }
                 else 
                 {
