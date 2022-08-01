@@ -31,6 +31,7 @@ namespace Assets.Scripts
         {
             mainCamera.transform.localScale = new Vector3(1, 1, 1);
 
+            // INSERT SERVER ENDPOINT FOLDER HERE
             string uri = "http://localhost:8000/UnityProjects/Video360SpeechCommands/Assets/Videos/";
             WebRequest request = WebRequest.Create(uri);
             WebResponse response;
@@ -43,7 +44,7 @@ namespace Assets.Scripts
                 response = null;
             }
 
-            Regex regex = new Regex("<a href=\".*[.mp4]\">(?<name>.*)</a>");
+            Regex regex = new Regex("<a href=\".*[.mp4]\">(?<name>.*[.mp4])</a>");
 
             if (response != null)
             {
@@ -55,6 +56,7 @@ namespace Assets.Scripts
                     if (matches.Count == 0)
                     {
                         Debug.Log("parse failed.");
+                        disableObjects("No videos found");
                         return;
                     }
                     else
@@ -141,18 +143,7 @@ namespace Assets.Scripts
             }
             else 
             {
-                foreach (Text txt in Viewport.GetComponentsInChildren<Text>())
-                {
-                    txt.gameObject.SetActive(false);
-                }
-                foreach (RawImage img in Viewport.GetComponentsInChildren<RawImage>())
-                {
-                    img.gameObject.SetActive(false);
-                }
-                mytext.text = "No server found";
-                mytext.color = Color.white;
-                mytext.fontSize = 100;
-                mytext.rectTransform.localScale = new Vector3((float)0.5, (float)0.5, 1);
+                disableObjects("No server found");
             }
         }
 
@@ -164,6 +155,22 @@ namespace Assets.Scripts
                 //    videos[k].Pause();
                
             // }
+        }
+
+        private void disableObjects(string feedback) 
+        {
+            foreach (Text txt in Viewport.GetComponentsInChildren<Text>())
+            {
+                txt.gameObject.SetActive(false);
+            }
+            foreach (RawImage img in Viewport.GetComponentsInChildren<RawImage>())
+            {
+                img.gameObject.SetActive(false);
+            }
+            mytext.text = feedback;
+            mytext.color = Color.white;
+            mytext.fontSize = 100;
+            mytext.rectTransform.localScale = new Vector3((float)0.5, (float)0.5, 1);
         }
 
         public void OnVideoSelect(int id)
