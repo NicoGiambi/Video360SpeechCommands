@@ -32,17 +32,14 @@ namespace Assets.Scripts
         private Slider videoScrubber;
         private Slider volumeSlider;
         private GameObject volumeWidget;
-        // private GameObject settingsPanel;
         private GameObject bufferedBackground;
         private Vector3 basePosition;
-        private Text videoPosition;
-        private Text videoDuration;
-        private Text framePos;
-        private Text frameMax;
         private float volumeUnit;
         private Button[] tracks = new Button[11];
         private float[] trackTimes = new float[11];
         private string[] tracksTitles = new string[11];
+        [SerializeField]
+        Text url;
 
         /// <summary>Gets or sets the player.</summary>
         /// <value>The player.</value>
@@ -71,19 +68,6 @@ namespace Assets.Scripts
         {
             bool visible = !volumeWidget.activeSelf;
             volumeWidget.SetActive(visible);
-
-            // close settings if volume opens.
-            // settingsPanel.SetActive(settingsPanel.activeSelf && !visible);
-        }
-
-        /// <summary>Raises the toggle settings event.</summary>
-        public void OnToggleSettings()
-        {
-            // bool visible = !settingsPanel.activeSelf;
-            // settingsPanel.SetActive(visible);
-
-            // close settings if volume opens.
-            // volumeWidget.SetActive(volumeWidget.activeSelf && !visible);
         }
 
         /// <summary>Raises the play pause event.</summary>
@@ -116,27 +100,11 @@ namespace Assets.Scripts
             CloseSubPanels();
         }
 
-        private void getTrackTitles() 
-        {
-            tracksTitles[0] = "1. Waltzer";
-            tracksTitles[1] = "2. Salsa";
-            tracksTitles[2] = "3. Samba";
-            tracksTitles[3] = "4. Cha";
-            tracksTitles[4] = "5. Miao";
-            tracksTitles[5] = "6. Regga";
-            tracksTitles[6] = "7. Rock";
-            tracksTitles[7] = "8. Punk";
-            tracksTitles[8] = "9. Metal";
-            tracksTitles[9] = "10. Pop";
-            tracksTitles[10] = "11. Yes";
-        }
-
         public void SelectTrack(int el)
         {
             for (int i = 0; i < trackTimes.Length; i++)
             {
                 trackTimes[i] = (float)Player.frameCount / trackTimes.Length * i;
-                //Debug.Log("<color=red>" + trackTimes[i].ToString() + "</color>");
             }
 
             Player.frame = (int)trackTimes[el];
@@ -153,7 +121,6 @@ namespace Assets.Scripts
                 Debug.Log("Setting current volume to " + val);
                 if (Player.canSetDirectAudioVolume)
                 {
-                    //framePos.text = val.ToString();
                     for (ushort track = 0; track <= Player.audioTrackCount; track++)
                         Player.SetDirectAudioVolume(track, val);
                 }
@@ -164,7 +131,6 @@ namespace Assets.Scripts
         public void CloseSubPanels()
         {
             volumeWidget.SetActive(false);
-            // settingsPanel.SetActive(false);
         }
 
         /// <summary>Fade this video canvas in or out.</summary>
@@ -185,7 +151,6 @@ namespace Assets.Scripts
 
         private void Awake()
         {
-            getTrackTitles();
 
             foreach (Button t in GetComponentsInChildren<Button>())
             {
@@ -194,32 +159,11 @@ namespace Assets.Scripts
                     int suffix = int.Parse(t.gameObject.name.Remove(0, 6));
                     tracks[suffix] = t;
                     
-                    getTrackTitles();
-
                     foreach (Text o in tracks[suffix].GetComponentsInChildren<Text>())
                     {
                         o.text = tracksTitles[suffix];
                     }
 
-                }
-            }
-            foreach (Text t in GetComponentsInChildren<Text>())
-            {
-                if (t.gameObject.name == "curpos_text")
-                {
-                    videoPosition = t;
-                }
-                else if (t.gameObject.name == "duration_text")
-                {
-                    videoDuration = t;
-                }
-                else if (t.gameObject.name == "curframe_text")
-                {
-                    framePos = t;
-                }
-                else if (t.gameObject.name == "maxframe_text")
-                {
-                    frameMax = t;
                 }
             }
 
@@ -262,19 +206,11 @@ namespace Assets.Scripts
                 {
                     volumeWidget = obj.gameObject;
                 }
-                /*
-                else if (obj.gameObject.name == "settings_panel")
-                {
-                    settingsPanel = obj.gameObject;
-                }
-                */
             }
         }
 
         private void Start()
         {
-            getTrackTitles();
-
             foreach (MyScrubberEvents s in GetComponentsInChildren<MyScrubberEvents>(true))
             {
                 s.ControlManager = this;
@@ -282,6 +218,7 @@ namespace Assets.Scripts
 
             if (Player != null)
             {
+                Player.url = url.text;
                 Player.Prepare();
             }
 
@@ -289,7 +226,6 @@ namespace Assets.Scripts
 
         private void Update()
         {
-            getTrackTitles();
 
             if (!Player.isPrepared || Player.isPaused)
             {
@@ -317,13 +253,6 @@ namespace Assets.Scripts
                 bufferedBackground.transform.localScale = new Vector3(sx, 1, 1);
                 bufferedBackground.transform.localPosition =
                     new Vector3(basePosition.x - (basePosition.x * sx), 0, 0);
-
-                // videoPosition.text = FormatTime((long)Player.time * 1000);
-                // videoDuration.text = FormatTime((long)Player.length * 1000);
-                // framePos.text = Player.frame.ToString();
-                // frameMax.text = Player.frameCount.ToString();
-
-
 
                 if (volumeSlider != null)
                 {
