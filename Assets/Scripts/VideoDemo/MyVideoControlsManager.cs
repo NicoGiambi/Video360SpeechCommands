@@ -20,6 +20,7 @@ namespace Assets.Scripts
 
 {
     using System.Collections;
+    using System.Net;
     using UnityEngine;
     using UnityEngine.UI;
     using UnityEngine.Video;
@@ -218,6 +219,17 @@ namespace Assets.Scripts
 
             if (Player != null)
             {
+                WebRequest request = WebRequest.Create(url.text);
+                request.Headers.Add("ngrok-skip-browser-warning", "ciao");
+                WebResponse response;
+                try
+                {
+                    response = request.GetResponse();
+                }
+                catch
+                {
+                    response = null;
+                }
                 Player.url = url.text;
                 Player.Prepare();
             }

@@ -32,8 +32,10 @@ namespace Assets.Scripts
             mainCamera.transform.localScale = new Vector3(1, 1, 1);
 
             // INSERT SERVER ENDPOINT FOLDER HERE
-            string uri = "http://localhost:8000/UnityProjects/Video360SpeechCommands/Assets/Videos/";
+            // string uri = "http://localhost:8000/UnityProjects/Video360SpeechCommands/Assets/Videos/";
+            string uri = "http://9ca8-137-204-11-201.ngrok.io/data01/video360/videos/";
             WebRequest request = WebRequest.Create(uri);
+            request.Headers.Add("ngrok-skip-browser-warning", "ciao");
             WebResponse response;
             try
             {
@@ -122,8 +124,6 @@ namespace Assets.Scripts
                             videos[i].frame = (int)videos[i].frameCount / 2;
 
                             videos[i].Play();
-                            videos[i].Pause();
-                            videos[i].Play();
                             
                             i++;
                         }
@@ -175,10 +175,11 @@ namespace Assets.Scripts
 
         public void OnVideoSelect(int id)
         {
+
             mainCamera.transform.localScale = new Vector3(0, 0, 0);
+            mytext.text = videos[id].url;
             catalog.SetActive(false);
             player.SetActive(true);
-            mytext.text = videos[id].url;
         }
     }
 }
